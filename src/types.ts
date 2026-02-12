@@ -10,3 +10,10 @@ export type CustomLink = {
   label: string;
   url: string;
 };
+
+export type GithubProfile = {
+  name: string;
+  avatarUrl: string;
+  followers: number;
+  publicRepos: number;
+};

@@ -1,22 +1,17 @@
+import { useProfile } from "../contexts/ProfileContext";
 import TextInput from "./TextInput";
 
-type ProfileSectionProps = {
-  githubUsername: string;
-  onGithubUsernameChange: (value: string) => void;
-  showFollowers: boolean;
-  onToggleFollowers: (value: boolean) => void;
-  showRepoCount: boolean;
-  onToggleRepoCount: (value: boolean) => void;
-};
+function ProfileSection() {
+  const {
+    showRepoCount,
+    githubUsername,
+    showFollowers,
+    setGithubUsername,
+    setShowFollowers,
+    setShowRepoCount,
+    fetchGithubProfileData,
+  } = useProfile();
 
-function ProfileSection({
-  githubUsername,
-  onGithubUsernameChange,
-  showFollowers,
-  onToggleFollowers,
-  showRepoCount,
-  onToggleRepoCount,
-}: ProfileSectionProps) {
   return (
     <section className="rounded-3xl border bg-white p-6">
       <h2 className="text-lg font-semibold">Configuração do Perfil</h2>
@@ -28,12 +23,13 @@ function ProfileSection({
             <TextInput
               type="text"
               value={githubUsername}
-              onChange={(event) => onGithubUsernameChange(event.target.value)}
+              onChange={(event) => setGithubUsername(event.target.value)}
               placeholder="seu-usuario"
               className="flex-1"
             />
             <button
               type="button"
+              onClick={fetchGithubProfileData}
               className="h-10 cursor-pointer rounded-2xl border bg-slate-50 px-4 text-sm font-semibold text-slate-700"
             >
               Buscar
@@ -52,7 +48,7 @@ function ProfileSection({
             <input
               type="checkbox"
               checked={showFollowers}
-              onChange={(event) => onToggleFollowers(event.target.checked)}
+              onChange={(event) => setShowFollowers(event.target.checked)}
               className="h-4 w-4 accent-emerald-600"
             />
           </label>
@@ -68,7 +64,7 @@ function ProfileSection({
             <input
               type="checkbox"
               checked={showRepoCount}
-              onChange={(event) => onToggleRepoCount(event.target.checked)}
+              onChange={(event) => setShowRepoCount(event.target.checked)}
               className="h-4 w-4 accent-emerald-600"
             />
           </label>

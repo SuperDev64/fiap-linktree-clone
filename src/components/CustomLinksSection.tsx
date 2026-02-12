@@ -1,37 +1,32 @@
-import type { CustomLink } from "../types";
+import { useProfile } from "../contexts/ProfileContext";
 import CustomLinkItem from "./CustomLinkItem";
 
-type CustomLinksSectionProps = {
-  links: CustomLink[];
-  onAdd: () => void;
-  onChange: (id: string, field: keyof CustomLink, value: string) => void;
-  onRemove: (id: string) => void;
-};
+function CustomLinksSection() {
+  const {
+    customLinks,
+    handleAddCustomLink,
+    handleCustomLinkChange,
+    handleRemoveCustomLink,
+  } = useProfile();
 
-function CustomLinksSection({
-  links,
-  onAdd,
-  onChange,
-  onRemove,
-}: CustomLinksSectionProps) {
   return (
     <section className="rounded-3xl border bg-white p-6">
       <h2 className="text-lg font-semibold">Links Personalizados</h2>
 
       <div className="mt-6 space-y-4">
-        {links.map((link, index) => (
+        {customLinks.map((link, index) => (
           <CustomLinkItem
             key={link.id}
             index={index}
             link={link}
-            onChange={onChange}
-            onRemove={onRemove}
+            onChange={handleCustomLinkChange}
+            onRemove={handleRemoveCustomLink}
           />
         ))}
 
         <button
           type="button"
-          onClick={onAdd}
+          onClick={handleAddCustomLink}
           className="w-full cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-600"
         >
           + Adicionar novo link

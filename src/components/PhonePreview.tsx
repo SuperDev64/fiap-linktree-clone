@@ -1,12 +1,5 @@
-import type { CustomLink, SocialLinks } from "../types";
-
-type PhonePreviewProps = {
-  githubUsername: string;
-  showFollowers: boolean;
-  showRepoCount: boolean;
-  socialLinks: SocialLinks;
-  customLinks: CustomLink[];
-};
+import { useProfile } from "../contexts/ProfileContext";
+import type { SocialLinks } from "../types";
 
 const SOCIAL_BADGES: Record<keyof SocialLinks, string> = {
   instagram: "IG",
@@ -15,13 +8,16 @@ const SOCIAL_BADGES: Record<keyof SocialLinks, string> = {
   x: "X",
 };
 
-function PhonePreview({
-  githubUsername,
-  showFollowers,
-  showRepoCount,
-  socialLinks,
-  customLinks,
-}: PhonePreviewProps) {
+function PhonePreview() {
+  const {
+    showRepoCount,
+    githubUsername,
+    showFollowers,
+    socialLinks,
+    customLinks,
+    githubProfile,
+  } = useProfile();
+
   const visibleSocial = (
     Object.keys(socialLinks) as Array<keyof SocialLinks>
   ).filter((key) => socialLinks[key].trim().length > 0);
@@ -41,19 +37,34 @@ function PhonePreview({
       <div className="mt-6 flex justify-center">
         <div className="relative w-80 rounded-3xl border-slate-900 bg-slate-950 p-2">
           <div className="min-h-96 h-140 overflow-y-auto rounded-2xl bg-white px-6 pb-6 pt-10 text-center">
-            <div className="mx-auto h-16 w-16 rounded-full bg-linear-to-br from-sky-200 via-white to-emerald-100" />
-            <h3 className="mt-4 text-base font-semibold">Seu perfil</h3>
+            {githubProfile ? (
+              <img
+                src={githubProfile.avatarUrl}
+                alt={githubProfile.name}
+                className="mx-auto size-16 rounded-full"
+              />
+            ) : (
+              <div className="mx-auto size-16 rounded-full bg-linear-to-br from-sky-200 via-white to-emerald-100" />
+            )}
+
+            <h3 className="mt-4 text-base font-semibold">
+              {githubProfile ? githubProfile.name : "Seu perfil"}
+            </h3>
             <p className="text-xs text-slate-500">{username}</p>
 
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
               {showFollowers && (
                 <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                  1.2k seguidores
+                  {githubProfile
+                    ? `${githubProfile.followers} seguidores`
+                    : "1.2k seguidores"}
                 </span>
               )}
               {showRepoCount && (
                 <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                  48 repos
+                  {githubProfile
+                    ? `${githubProfile.publicRepos} repositórios`
+                    : "42 repositórios"}
                 </span>
               )}
             </div>

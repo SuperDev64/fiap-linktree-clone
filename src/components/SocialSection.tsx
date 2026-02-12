@@ -1,10 +1,6 @@
+import { useProfile } from "../contexts/ProfileContext";
 import type { SocialLinks } from "../types";
 import TextInput from "./TextInput";
-
-type SocialSectionProps = {
-  socialLinks: SocialLinks;
-  onSocialChange: (field: keyof SocialLinks, value: string) => void;
-};
 
 const SOCIAL_FIELDS: Array<{
   key: keyof SocialLinks;
@@ -33,7 +29,9 @@ const SOCIAL_FIELDS: Array<{
   { key: "x", label: "X", placeholder: "https://x.com/seuuser", badge: "X" },
 ];
 
-function SocialSection({ socialLinks, onSocialChange }: SocialSectionProps) {
+function SocialSection() {
+  const { socialLinks, handleSocialChange } = useProfile();
+
   return (
     <section className="rounded-3xl border bg-white p-6">
       <h2 className="text-lg font-semibold">Redes Sociais</h2>
@@ -50,7 +48,7 @@ function SocialSection({ socialLinks, onSocialChange }: SocialSectionProps) {
                 type="url"
                 value={socialLinks[field.key]}
                 onChange={(event) =>
-                  onSocialChange(field.key, event.target.value)
+                  handleSocialChange(field.key, event.target.value)
                 }
                 placeholder={field.placeholder}
                 prefix={field.badge}
