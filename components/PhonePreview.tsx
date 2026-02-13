@@ -1,5 +1,5 @@
-import { useProfile } from "../contexts/ProfileContext";
-import type { SocialLinks } from "../types";
+import { useProfile } from "@/contexts/ProfileContext";
+import type { SocialLinks } from "@/types/types";
 
 const SOCIAL_BADGES: Record<keyof SocialLinks, string> = {
   instagram: "IG",

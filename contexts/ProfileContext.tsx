@@ -1,11 +1,16 @@
+"use client";
+
 import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
-import type { SocialLinks, CustomLink, GithubProfile } from "../types";
+import type { SocialLinks, CustomLink, GithubProfile } from "@/types/types";
+import { useAuth } from "./AuthContext";
+import { loadUserProfile, saveUserProfile } from "@/services/profile";
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
@@ -28,9 +33,13 @@ type ProfileContextType = {
   handleAddCustomLink: () => void;
   handleRemoveCustomLink: (id: string) => void;
   fetchGithubProfileData: () => void;
+  handleSaveProfile: () => Promise<void>;
+  loadProfileData: (slug: string) => Promise<void>;
 };
 
 const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
+  const { user, profileSlug } = useAuth();
+
   const INITIAL_SOCIAL_LINKS: SocialLinks = {
     instagram: "",
     youtube: "",
@@ -111,6 +120,45 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
     [githubUsername],
   );
 
+  const handleSaveProfile = async () => {
+    if (!user || !profileSlug) return;
+
+    try {
+      await saveUserProfile(profileSlug, {
+        userId: user.uid,
+        githubUsername,
+        showFollowers,
+        showRepoCount,
+        socialLinks,
+        customLinks,
+      });
+    } catch (error) {
+      console.error("Erro ao salvar perfil:", error);
+    }
+  };
+
+  const loadProfileData = async (profileSlug: string) => {
+    try {
+      const data = await loadUserProfile(profileSlug);
+
+      if (data) {
+        setGithubUsername(data.githubUsername);
+        setShowFollowers(data.showFollowers);
+        setShowRepoCount(data.showRepoCount);
+        setSocialLinks(data.socialLinks);
+        setCustomLinks(data.customLinks);
+      }
+    } catch (error) {
+      console.log("Erro ao carregar perfil:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (profileSlug) {
+      loadProfileData(profileSlug);
+    }
+  }, [profileSlug]);
+
   const values = useMemo(
     () => ({
       githubUsername,
@@ -127,6 +175,8 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
       handleAddCustomLink,
       handleRemoveCustomLink,
       fetchGithubProfileData: () => fetchGithubProfileData(),
+      handleSaveProfile,
+      loadProfileData,
     }),
     [
       githubUsername,
@@ -143,6 +193,8 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
       handleAddCustomLink,
       handleRemoveCustomLink,
       fetchGithubProfileData,
+      handleSaveProfile,
+      loadProfileData,
     ],
   );
 

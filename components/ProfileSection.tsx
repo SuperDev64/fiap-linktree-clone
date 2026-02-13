@@ -1,4 +1,4 @@
-import { useProfile } from "../contexts/ProfileContext";
+import { useProfile } from "@/contexts/ProfileContext";
 import TextInput from "./TextInput";
 
 function ProfileSection() {

@@ -1,4 +1,4 @@
-import type { CustomLink } from "../types";
+import type { CustomLink } from "@/types/types";
 import TextInput from "./TextInput";
 
 type CustomLinkItemProps = {

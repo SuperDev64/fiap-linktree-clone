@@ -1,5 +1,5 @@
-import { useProfile } from "../contexts/ProfileContext";
-import type { SocialLinks } from "../types";
+import { useProfile } from "@/contexts/ProfileContext";
+import type { SocialLinks } from "@/types/types";
 import TextInput from "./TextInput";
 
 const SOCIAL_FIELDS: Array<{

@@ -1,4 +1,4 @@
-import { useProfile } from "../contexts/ProfileContext";
+import { useProfile } from "@/contexts/ProfileContext";
 import CustomLinkItem from "./CustomLinkItem";
 
 function CustomLinksSection() {
